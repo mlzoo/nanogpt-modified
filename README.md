@@ -159,7 +159,8 @@ class CausalSelfAttention(nn.Module):
 
   这样避免三个独立线性层的 kernel 调度开销。
 
-- `self.c_proj.NANOGPT_SCALE_INIT = 1` 这是**关键标记**，告诉 `_init_weights()` 方法对这层的权重进行特殊缩放（乘以 $1/\sqrt{2 \times \text{n\_layer}}$），用于稳定残差网络中的梯度方差。
+- `self.c_proj.NANOGPT_SCALE_INIT = 1` 这是**关键标记**，告诉 `_init_weights()` 方法对这层的权重进行特殊缩放
+（乘以 $1/\sqrt{2 \times \text{n\_layer}}$），用于稳定残差网络中的梯度方差。
 
 - 重排维度以便批量矩阵乘法：
 
@@ -366,7 +367,8 @@ __权重初始化（`_init_weights`）__
 
 - 对 Linear 层：
   - 默认标准差为 0.02（标准的 Transformer 初始化）
-  - 如果模块有 `NANOGPT_SCALE_INIT` 属性，则乘以 $(2 \times \text{n\_layer})^{-0.5}$
+  - 如果模块有 `NANOGPT_SCALE_INIT` 属性，则乘以 
+  $(2 \times \text{n\_layer})^{-0.5}$
   - 设计思路：在残差网络中，第 $i$ 层的方差会大约累积 $i$ 倍。在深层（比如 n_layer=12），如果不缩放，残差分支的输出会有过大方差，导致梯度爆炸。这个缩放使得即使在第 n_layer 层，梯度方差仍保持 $\mathcal{O}(1)$ 量级。
 
 - 偏置初始化为 0
